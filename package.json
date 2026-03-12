@@ -1,0 +1,22 @@
+{
+    "name": "route-auditor-monorepo",
+    "private": true,
+    "scripts": {
+      "dev": "pnpm --filter web dev",
+      "build": "pnpm -r build",
+      "build:cli": "pnpm --filter cli build",
+      "build:web": "pnpm --filter web build",
+      "test": "pnpm --filter cli test",
+      "lint": "pnpm -r lint",
+      "typecheck": "pnpm -r typecheck",
+      "clean": "pnpm -r clean"
+    },
+    "devDependencies": {
+      "typescript": "latest",
+      "prettier": "latest"
+    },
+    "engines": {
+      "node": ">=22.0.0",
+      "pnpm": ">=9.0.0"
+    }
+  }
