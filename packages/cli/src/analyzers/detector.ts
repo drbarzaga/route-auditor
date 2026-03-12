@@ -25,7 +25,9 @@ const ORM_MAP: Record<string, DetectedStack['orm']> = {
   '@prisma/client': 'prisma',
   'drizzle-orm': 'drizzle',
   'mongoose': 'mongoose',
-  'raw': 'raw',
+  'pg': 'raw',
+  'mysql2': 'raw',
+  'better-sqlite3': 'raw',
 }
 
 const VALIDATION_MAP: Record<string, DetectedStack['validation']> = {
