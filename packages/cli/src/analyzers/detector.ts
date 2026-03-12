@@ -80,8 +80,8 @@ function detect<T>(deps: Set<string>, map: Record<string, T>): T | undefined {
   return undefined
 }
 
-export function detectStack(_projectRoot: string): DetectedStack {
-  const pkg = readPackageJson(_projectRoot);
+export function detectStack(projectRoot: string): DetectedStack {
+  const pkg = readPackageJson(projectRoot);
   const deps = collectDependencies(pkg);
 
   const auth = detect(deps, AUTH_MAP);
