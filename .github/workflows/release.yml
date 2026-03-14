@@ -35,6 +35,13 @@ jobs:
 
       - run: pnpm build
 
+      - name: Configure npm auth
+        run: |
+          echo "@route-auditor:registry=https://registry.npmjs.org/" >> .npmrc
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Create release PR or publish
         uses: changesets/action@v1
         with:
