@@ -30,7 +30,7 @@
     "test:coverage": "vitest --coverage",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist",
-    "release": "pnpm build && npm publish"
+    "release": "pnpm build && npm publish --access public"
   },
   "dependencies": {
     "@route-auditor/shared": "workspace:*",
