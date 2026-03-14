@@ -36,13 +36,13 @@ Audit Next.js routes for security issues.
 
 ## Options
 
-| Option | Description | Default |
-|--------|-------------|---------|
-| `-o, --output <format>` | Output format: `console`, `json`, `sarif` | `console` |
-| `-s, --severity <level>` | Minimum severity: `critical`, `high`, `medium`, `low`, `info` | `info` |
-| `--fail-on <level>` | Exit with code 1 if vulnerabilities at this level or higher are found | — |
-| `--file <path>` | Write output to file instead of stdout | — |
-| `--config <path>` | Path to `route-auditor.config.json` | — |
+| Option                   | Description                                                           | Default   |
+| ------------------------ | --------------------------------------------------------------------- | --------- |
+| `-o, --output <format>`  | Output format: `console`, `json`, `sarif`                             | `console` |
+| `-s, --severity <level>` | Minimum severity: `critical`, `high`, `medium`, `low`, `info`         | `info`    |
+| `--fail-on <level>`      | Exit with code 1 if vulnerabilities at this level or higher are found | —         |
+| `--file <path>`          | Write output to file instead of stdout                                | —         |
+| `--config <path>`        | Path to `route-auditor.config.json`                                   | —         |
 
 ## CI Integration
 
@@ -65,9 +65,7 @@ route-auditor audit . --output sarif --file results.sarif
   "rules": {
     "RW-AUTH-001": false
   },
-  "ignore": [
-    "app/api/health/**"
-  ]
+  "ignore": ["app/api/health/**"]
 }
 ```
 
