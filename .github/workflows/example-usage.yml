@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      security-events: write  # required for uploading SARIF to GitHub Code Scanning
+      security-events: write # required for uploading SARIF to GitHub Code Scanning
 
     steps:
       - uses: actions/checkout@v4
