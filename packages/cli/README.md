@@ -1,4 +1,4 @@
-# @route-auditor/cli
+# <img src="https://raw.githubusercontent.com/ayaxsoft/route-auditor/main/packages/web/public/logo.svg" alt="route-auditor logo" width="32" height="32" style="vertical-align: middle" /> @route-auditor/cli
 
 Catch security issues in your Next.js routes before they reach production.
 
