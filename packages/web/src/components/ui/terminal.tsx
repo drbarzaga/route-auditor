@@ -1,6 +1,6 @@
-"use client";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
+'use client'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { cn } from '@/lib/utils'
 
 const KEY_SOUNDS_DOWN: Record<string, [number, number]> = {
   A: [31542, 85],
@@ -29,24 +29,24 @@ const KEY_SOUNDS_DOWN: Record<string, [number, number]> = {
   X: [39148, 76],
   Y: [24811, 93],
   Z: [38694, 80],
-  " ": [51541, 144],
-  "-": [42594, 90],
-  "@": [23317, 83],
-  "/": [42594, 90],
-  ".": [42594, 90],
-  ":": [42594, 90],
-  "0": [26309, 84],
-  "1": [25313, 95],
-  "2": [23317, 83],
-  "3": [23817, 92],
-  "4": [24297, 92],
-  "5": [24811, 93],
-  "6": [25313, 95],
-  "7": [25795, 91],
-  "8": [26309, 84],
-  "9": [26804, 83],
+  ' ': [51541, 144],
+  '-': [42594, 90],
+  '@': [23317, 83],
+  '/': [42594, 90],
+  '.': [42594, 90],
+  ':': [42594, 90],
+  '0': [26309, 84],
+  '1': [25313, 95],
+  '2': [23317, 83],
+  '3': [23817, 92],
+  '4': [24297, 92],
+  '5': [24811, 93],
+  '6': [25313, 95],
+  '7': [25795, 91],
+  '8': [26309, 84],
+  '9': [26804, 83],
   Enter: [19065, 110],
-};
+}
 
 const KEY_SOUNDS_UP: Record<string, [number, number]> = {
   A: [31632, 80],
@@ -75,189 +75,185 @@ const KEY_SOUNDS_UP: Record<string, [number, number]> = {
   X: [39228, 70],
   Y: [24911, 85],
   Z: [38779, 75],
-  " ": [51691, 130],
-  "-": [42689, 85],
-  "@": [23402, 80],
-  "/": [42689, 85],
-  ".": [42689, 85],
-  ":": [42689, 85],
-  "0": [26394, 80],
-  "1": [25413, 85],
-  "2": [23402, 80],
-  "3": [23912, 85],
-  "4": [24392, 85],
-  "5": [24911, 85],
-  "6": [25413, 85],
-  "7": [25890, 85],
-  "8": [26394, 80],
-  "9": [26889, 80],
+  ' ': [51691, 130],
+  '-': [42689, 85],
+  '@': [23402, 80],
+  '/': [42689, 85],
+  '.': [42689, 85],
+  ':': [42689, 85],
+  '0': [26394, 80],
+  '1': [25413, 85],
+  '2': [23402, 80],
+  '3': [23912, 85],
+  '4': [24392, 85],
+  '5': [24911, 85],
+  '6': [25413, 85],
+  '7': [25890, 85],
+  '8': [26394, 80],
+  '9': [26889, 80],
   Enter: [19180, 100],
-};
+}
 
 function useAudio(enabled: boolean) {
-  const ctxRef = useRef<AudioContext | null>(null);
-  const bufferRef = useRef<AudioBuffer | null>(null);
-  const readyRef = useRef(false);
+  const ctxRef = useRef<AudioContext | null>(null)
+  const bufferRef = useRef<AudioBuffer | null>(null)
+  const readyRef = useRef(false)
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled) return
     const init = async () => {
       try {
-        ctxRef.current = new AudioContext();
-        const res = await fetch("/sounds/sound.ogg");
-        if (!res.ok) return;
-        bufferRef.current = await ctxRef.current.decodeAudioData(
-          await res.arrayBuffer(),
-        );
-        readyRef.current = true;
+        ctxRef.current = new AudioContext()
+        const res = await fetch('/sounds/sound.ogg')
+        if (!res.ok) return
+        bufferRef.current = await ctxRef.current.decodeAudioData(await res.arrayBuffer())
+        readyRef.current = true
       } catch {}
-    };
-    init();
+    }
+    init()
     return () => {
-      ctxRef.current?.close();
-    };
-  }, [enabled]);
+      ctxRef.current?.close()
+    }
+  }, [enabled])
 
   const playSound = (sound: [number, number] | undefined) => {
-    if (!readyRef.current || !ctxRef.current || !bufferRef.current || !sound)
-      return;
-    if (ctxRef.current.state === "suspended") ctxRef.current.resume();
-    const src = ctxRef.current.createBufferSource();
-    src.buffer = bufferRef.current;
-    src.connect(ctxRef.current.destination);
-    src.start(0, sound[0] / 1000, sound[1] / 1000);
-  };
+    if (!readyRef.current || !ctxRef.current || !bufferRef.current || !sound) return
+    if (ctxRef.current.state === 'suspended') ctxRef.current.resume()
+    const src = ctxRef.current.createBufferSource()
+    src.buffer = bufferRef.current
+    src.connect(ctxRef.current.destination)
+    src.start(0, sound[0] / 1000, sound[1] / 1000)
+  }
 
   const down = (key: string) =>
-    playSound(KEY_SOUNDS_DOWN[key.toUpperCase()] || KEY_SOUNDS_DOWN[key]);
-  const up = (key: string) =>
-    playSound(KEY_SOUNDS_UP[key.toUpperCase()] || KEY_SOUNDS_UP[key]);
+    playSound(KEY_SOUNDS_DOWN[key.toUpperCase()] || KEY_SOUNDS_DOWN[key])
+  const up = (key: string) => playSound(KEY_SOUNDS_UP[key.toUpperCase()] || KEY_SOUNDS_UP[key])
 
-  return { down, up };
+  return { down, up }
 }
 
 function useInView(ref: React.RefObject<HTMLElement | null>, once = true) {
-  const [inView, setInView] = useState(false);
-  const triggered = useRef(false);
+  const [inView, setInView] = useState(false)
+  const triggered = useRef(false)
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el || (once && triggered.current)) return;
+    const el = ref.current
+    if (!el || (once && triggered.current)) return
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !triggered.current) {
-          setInView(true);
+          setInView(true)
           if (once) {
-            triggered.current = true;
-            observer.disconnect();
+            triggered.current = true
+            observer.disconnect()
           }
         }
       },
       { threshold: 0.1 },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [ref, once]);
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [ref, once])
 
-  return inView;
+  return inView
 }
 
 type TokenType =
-  | "command"
-  | "flag"
-  | "string"
-  | "number"
-  | "operator"
-  | "path"
-  | "variable"
-  | "comment"
-  | "default";
+  | 'command'
+  | 'flag'
+  | 'string'
+  | 'number'
+  | 'operator'
+  | 'path'
+  | 'variable'
+  | 'comment'
+  | 'default'
 
 interface Token {
-  type: TokenType;
-  value: string;
+  type: TokenType
+  value: string
 }
 
 function tokenizeBash(text: string): Token[] {
-  const tokens: Token[] = [];
-  const words = text.split(/(\s+)/);
+  const tokens: Token[] = []
+  const words = text.split(/(\s+)/)
 
-  let isFirstWord = true;
+  let isFirstWord = true
 
   for (const word of words) {
     if (/^\s+$/.test(word)) {
-      tokens.push({ type: "default", value: word });
-      continue;
+      tokens.push({ type: 'default', value: word })
+      continue
     }
 
-    if (word.startsWith("#")) {
-      tokens.push({ type: "comment", value: word });
-      continue;
+    if (word.startsWith('#')) {
+      tokens.push({ type: 'comment', value: word })
+      continue
     }
 
-    if (word.startsWith("$")) {
-      tokens.push({ type: "variable", value: word });
-      isFirstWord = false;
-      continue;
+    if (word.startsWith('$')) {
+      tokens.push({ type: 'variable', value: word })
+      isFirstWord = false
+      continue
     }
 
-    if (word.startsWith("--") || word.startsWith("-")) {
-      tokens.push({ type: "flag", value: word });
-      isFirstWord = false;
-      continue;
+    if (word.startsWith('--') || word.startsWith('-')) {
+      tokens.push({ type: 'flag', value: word })
+      isFirstWord = false
+      continue
     }
 
     if (/^["'].*["']$/.test(word)) {
-      tokens.push({ type: "string", value: word });
-      isFirstWord = false;
-      continue;
+      tokens.push({ type: 'string', value: word })
+      isFirstWord = false
+      continue
     }
 
     if (/^\d+$/.test(word)) {
-      tokens.push({ type: "number", value: word });
-      isFirstWord = false;
-      continue;
+      tokens.push({ type: 'number', value: word })
+      isFirstWord = false
+      continue
     }
 
     if (/^[|>&<]+$/.test(word)) {
-      tokens.push({ type: "operator", value: word });
-      isFirstWord = true;
-      continue;
+      tokens.push({ type: 'operator', value: word })
+      isFirstWord = true
+      continue
     }
 
-    if (word.includes("/") || word.startsWith(".") || word.startsWith("~")) {
-      tokens.push({ type: "path", value: word });
-      isFirstWord = false;
-      continue;
+    if (word.includes('/') || word.startsWith('.') || word.startsWith('~')) {
+      tokens.push({ type: 'path', value: word })
+      isFirstWord = false
+      continue
     }
 
     if (isFirstWord) {
-      tokens.push({ type: "command", value: word });
-      isFirstWord = false;
-      continue;
+      tokens.push({ type: 'command', value: word })
+      isFirstWord = false
+      continue
     }
 
-    tokens.push({ type: "default", value: word });
+    tokens.push({ type: 'default', value: word })
   }
 
-  return tokens;
+  return tokens
 }
 
 const tokenColors: Record<TokenType, string> = {
-  command: "text-emerald-400",
-  flag: "text-sky-400",
-  string: "text-amber-300",
-  number: "text-purple-400",
-  operator: "text-red-400",
-  path: "text-cyan-300",
-  variable: "text-pink-400",
-  comment: "text-neutral-500",
-  default: "text-neutral-300",
-};
+  command: 'text-emerald-400',
+  flag: 'text-sky-400',
+  string: 'text-amber-300',
+  number: 'text-purple-400',
+  operator: 'text-red-400',
+  path: 'text-cyan-300',
+  variable: 'text-pink-400',
+  comment: 'text-neutral-500',
+  default: 'text-neutral-300',
+}
 
 function SyntaxHighlightedText({ text }: { text: string }) {
-  const tokens = tokenizeBash(text);
+  const tokens = tokenizeBash(text)
 
   return (
     <>
@@ -267,191 +263,175 @@ function SyntaxHighlightedText({ text }: { text: string }) {
         </span>
       ))}
     </>
-  );
+  )
 }
 
 function ColorizedOutput({ content }: { content: string }) {
-  if (content.includes("[HIGH]"))
-    return <span className="font-semibold text-amber-400">{content}</span>;
-  if (content.includes("[CRITICAL]"))
-    return <span className="font-semibold text-red-400">{content}</span>;
-  if (content.includes("[MEDIUM]"))
-    return <span className="font-semibold text-yellow-400">{content}</span>;
-  if (content.startsWith("⚡"))
-    return <span className="font-bold text-violet-400">{content}</span>;
-  if (content.trim().startsWith("Fix:"))
-    return <span className="text-emerald-400">{content}</span>;
-  if (content.trim().startsWith("→"))
-    return <span className="text-neutral-400">{content}</span>;
-  if (content.includes("█") || content.includes("░"))
-    return <span className="text-emerald-400">{content}</span>;
+  if (content.includes('[HIGH]'))
+    return <span className="font-semibold text-amber-400">{content}</span>
+  if (content.includes('[CRITICAL]'))
+    return <span className="font-semibold text-red-400">{content}</span>
+  if (content.includes('[MEDIUM]'))
+    return <span className="font-semibold text-yellow-400">{content}</span>
+  if (content.startsWith('⚡')) return <span className="font-bold text-violet-400">{content}</span>
+  if (content.trim().startsWith('Fix:')) return <span className="text-emerald-400">{content}</span>
+  if (content.trim().startsWith('→')) return <span className="text-neutral-400">{content}</span>
+  if (content.includes('█') || content.includes('░'))
+    return <span className="text-emerald-400">{content}</span>
   if (content.trim().match(/^\d+ \/ 100/))
-    return <span className="font-semibold text-neutral-200">{content}</span>;
+    return <span className="font-semibold text-neutral-200">{content}</span>
   if (content.trim().match(/vulnerabilities across/))
-    return <span className="text-neutral-500">{content}</span>;
-  if (content.includes("OWASP"))
-    return <span className="text-neutral-600">{content}</span>;
-  return <span className="text-neutral-400">{content}</span>;
+    return <span className="text-neutral-500">{content}</span>
+  if (content.includes('OWASP')) return <span className="text-neutral-600">{content}</span>
+  return <span className="text-neutral-400">{content}</span>
 }
 
 interface TerminalLine {
-  type: "command" | "output";
-  content: string;
+  type: 'command' | 'output'
+  content: string
 }
 
 export interface TerminalProps {
-  commands: string[];
-  outputs?: Record<number, string[]>;
-  username?: string;
-  className?: string;
-  typingSpeed?: number;
-  delayBetweenCommands?: number;
-  initialDelay?: number;
-  enableSound?: boolean;
+  commands: string[]
+  outputs?: Record<number, string[]>
+  username?: string
+  className?: string
+  typingSpeed?: number
+  delayBetweenCommands?: number
+  initialDelay?: number
+  enableSound?: boolean
 }
 
 export function Terminal({
-  commands = ["npx shadcn@latest init"],
+  commands = ['npx shadcn@latest init'],
   outputs = {},
-  username = "Manus-Macbook",
+  username = 'Manus-Macbook',
   className,
   typingSpeed = 50,
   delayBetweenCommands = 800,
   initialDelay = 500,
   enableSound = true,
 }: TerminalProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(containerRef);
-  const { down, up } = useAudio(enableSound);
+  const containerRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const inView = useInView(containerRef)
+  const { down, up } = useAudio(enableSound)
 
-  const [lines, setLines] = useState<TerminalLine[]>([]);
-  const [currentText, setCurrentText] = useState("");
-  const [commandIdx, setCommandIdx] = useState(0);
-  const [charIdx, setCharIdx] = useState(0);
-  const [outputIdx, setOutputIdx] = useState(-1);
+  const [lines, setLines] = useState<TerminalLine[]>([])
+  const [currentText, setCurrentText] = useState('')
+  const [commandIdx, setCommandIdx] = useState(0)
+  const [charIdx, setCharIdx] = useState(0)
+  const [outputIdx, setOutputIdx] = useState(-1)
   const [phase, setPhase] = useState<
-    "idle" | "typing" | "executing" | "outputting" | "pausing" | "done"
-  >("idle");
-  const [cursorVisible, setCursorVisible] = useState(true);
+    'idle' | 'typing' | 'executing' | 'outputting' | 'pausing' | 'done'
+  >('idle')
+  const [cursorVisible, setCursorVisible] = useState(true)
 
-  const currentCommand = commands[commandIdx] || "";
-  const currentOutputs = useMemo(
-    () => outputs[commandIdx] || [],
-    [outputs, commandIdx],
-  );
-  const isLastCommand = commandIdx === commands.length - 1;
+  const currentCommand = commands[commandIdx] || ''
+  const currentOutputs = useMemo(() => outputs[commandIdx] || [], [outputs, commandIdx])
+  const isLastCommand = commandIdx === commands.length - 1
 
   useEffect(() => {
-    if (!inView || phase !== "idle") return;
-    const t = setTimeout(() => setPhase("typing"), initialDelay);
-    return () => clearTimeout(t);
-  }, [inView, phase, initialDelay]);
+    if (!inView || phase !== 'idle') return
+    const t = setTimeout(() => setPhase('typing'), initialDelay)
+    return () => clearTimeout(t)
+  }, [inView, phase, initialDelay])
 
   useEffect(() => {
-    if (phase !== "typing") return;
+    if (phase !== 'typing') return
 
     if (charIdx < currentCommand.length) {
-      const char = currentCommand[charIdx];
-      down(char);
+      const char = currentCommand[charIdx]
+      down(char)
       const t = setTimeout(
         () => {
-          up(char);
-          setCurrentText(currentCommand.slice(0, charIdx + 1));
-          setCharIdx((c) => c + 1);
+          up(char)
+          setCurrentText(currentCommand.slice(0, charIdx + 1))
+          setCharIdx((c) => c + 1)
         },
         typingSpeed + Math.random() * 30,
-      );
-      return () => clearTimeout(t);
+      )
+      return () => clearTimeout(t)
     } else {
-      down("Enter");
+      down('Enter')
       const t = setTimeout(() => {
-        up("Enter");
-        setPhase("executing");
-      }, 80);
-      return () => clearTimeout(t);
+        up('Enter')
+        setPhase('executing')
+      }, 80)
+      return () => clearTimeout(t)
     }
-  }, [phase, charIdx, currentCommand, typingSpeed, down, up]);
+  }, [phase, charIdx, currentCommand, typingSpeed, down, up])
 
   useEffect(() => {
-    if (phase !== "executing") return;
+    if (phase !== 'executing') return
 
-    setLines((prev) => [...prev, { type: "command", content: currentCommand }]);
-    setCurrentText("");
+    setLines((prev) => [...prev, { type: 'command', content: currentCommand }])
+    setCurrentText('')
 
     if (currentOutputs.length > 0) {
-      setOutputIdx(0);
-      setPhase("outputting");
+      setOutputIdx(0)
+      setPhase('outputting')
     } else if (isLastCommand) {
-      setPhase("done");
+      setPhase('done')
     } else {
-      setPhase("pausing");
+      setPhase('pausing')
     }
-  }, [phase, currentCommand, currentOutputs.length, isLastCommand]);
+  }, [phase, currentCommand, currentOutputs.length, isLastCommand])
 
   useEffect(() => {
-    if (phase !== "outputting") return;
+    if (phase !== 'outputting') return
 
     if (outputIdx >= 0 && outputIdx < currentOutputs.length) {
       const t = setTimeout(() => {
-        setLines((prev) => [
-          ...prev,
-          { type: "output", content: currentOutputs[outputIdx] },
-        ]);
-        setOutputIdx((i) => i + 1);
-      }, 150);
-      return () => clearTimeout(t);
+        setLines((prev) => [...prev, { type: 'output', content: currentOutputs[outputIdx] }])
+        setOutputIdx((i) => i + 1)
+      }, 150)
+      return () => clearTimeout(t)
     } else if (outputIdx >= currentOutputs.length) {
       const t = setTimeout(() => {
         if (isLastCommand) {
-          setPhase("done");
+          setPhase('done')
         } else {
-          setPhase("pausing");
+          setPhase('pausing')
         }
-      }, 300);
-      return () => clearTimeout(t);
+      }, 300)
+      return () => clearTimeout(t)
     }
-  }, [phase, outputIdx, currentOutputs, isLastCommand]);
+  }, [phase, outputIdx, currentOutputs, isLastCommand])
 
   useEffect(() => {
-    if (phase !== "pausing") return;
+    if (phase !== 'pausing') return
     const t = setTimeout(() => {
-      setCharIdx(0);
-      setOutputIdx(-1);
-      setCommandIdx((c) => c + 1);
-      setPhase("typing");
-    }, delayBetweenCommands);
-    return () => clearTimeout(t);
-  }, [phase, delayBetweenCommands]);
+      setCharIdx(0)
+      setOutputIdx(-1)
+      setCommandIdx((c) => c + 1)
+      setPhase('typing')
+    }, delayBetweenCommands)
+    return () => clearTimeout(t)
+  }, [phase, delayBetweenCommands])
 
   useEffect(() => {
-    const interval = setInterval(() => setCursorVisible((v) => !v), 530);
-    return () => clearInterval(interval);
-  }, []);
+    const interval = setInterval(() => setCursorVisible((v) => !v), 530)
+    return () => clearInterval(interval)
+  }, [])
 
   useEffect(() => {
     if (contentRef.current) {
-      contentRef.current.scrollTop = contentRef.current.scrollHeight;
+      contentRef.current.scrollTop = contentRef.current.scrollHeight
     }
-  }, [lines, phase]);
+  }, [lines, phase])
 
   const prompt = (
     <span className="text-neutral-500">
       <span className="text-sky-500">{username}</span>
       <span className="text-emerald-600">:</span>
       <span className="text-sky-400">~</span>
-      <span className="text-neutral-500">$</span>{" "}
+      <span className="text-neutral-500">$</span>{' '}
     </span>
-  );
+  )
 
   return (
-    <div
-      ref={containerRef}
-      className={cn(
-        "w-full font-mono text-xs",
-        className,
-      )}
-    >
+    <div ref={containerRef} className={cn('w-full font-mono text-xs', className)}>
       <div className="overflow-hidden rounded-lg border border-neutral-800 bg-neutral-900 shadow-2xl">
         {/* Title Bar */}
         <div className="flex items-center gap-2 bg-neutral-800 px-4 py-3">
@@ -461,21 +441,16 @@ export function Terminal({
             <div className="h-3 w-3 rounded-full bg-green-500 transition-colors hover:bg-green-600" />
           </div>
           <div className="flex-1 text-center">
-            <span className="truncate text-xs text-neutral-400">
-              {username} — bash
-            </span>
+            <span className="truncate text-xs text-neutral-400">{username} — bash</span>
           </div>
           <div className="w-[52px]" />
         </div>
 
         {/* Terminal Content */}
-        <div
-          ref={contentRef}
-          className="no-visible-scrollbar h-80 overflow-y-auto p-4 font-mono"
-        >
+        <div ref={contentRef} className="no-visible-scrollbar h-80 overflow-y-auto p-4 font-mono">
           {lines.map((line, i) => (
             <div key={i} className="leading-relaxed whitespace-pre-wrap">
-              {line.type === "command" ? (
+              {line.type === 'command' ? (
                 <span>
                   {prompt}
                   <SyntaxHighlightedText text={line.content} />
@@ -486,7 +461,7 @@ export function Terminal({
             </div>
           ))}
 
-          {phase === "typing" && (
+          {phase === 'typing' && (
             <div className="leading-relaxed whitespace-pre-wrap">
               {prompt}
               <SyntaxHighlightedText text={currentText} />
@@ -494,15 +469,13 @@ export function Terminal({
             </div>
           )}
 
-          {(phase === "done" ||
-            phase === "pausing" ||
-            phase === "outputting") && (
+          {(phase === 'done' || phase === 'pausing' || phase === 'outputting') && (
             <div className="leading-relaxed whitespace-pre-wrap">
               {prompt}
               <span
                 className={cn(
-                  "inline-block h-4 w-2 bg-neutral-300 align-middle transition-opacity duration-100",
-                  !cursorVisible && "opacity-0",
+                  'inline-block h-4 w-2 bg-neutral-300 align-middle transition-opacity duration-100',
+                  !cursorVisible && 'opacity-0',
                 )}
               />
             </div>
@@ -510,5 +483,5 @@ export function Terminal({
         </div>
       </div>
     </div>
-  );
+  )
 }
