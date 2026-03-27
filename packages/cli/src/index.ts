@@ -27,7 +27,10 @@ const program = new Command()
 
 declare const __PACKAGE_VERSION__: string
 
-program.name('route-auditor').description('Security auditor for Next.js routes').version(__PACKAGE_VERSION__)
+program
+  .name('route-auditor')
+  .description('Security auditor for Next.js routes')
+  .version(__PACKAGE_VERSION__)
 
 program.addCommand(auditCommand)
 program.addCommand(initCommand)
