@@ -86,12 +86,15 @@ const SCENARIOS: Scenario[] = [
 ]
 
 const COMMAND = 'npx @route-auditor/cli audit .'
+const VERSION = process.env.NEXT_PUBLIC_CLI_VERSION ?? ''
 
 const TerminalAnimation = () => {
   const [key, setKey] = useState(0)
   const [scenarioIdx] = useState(() => Math.floor(Math.random() * SCENARIOS.length))
 
-  const scenario = SCENARIOS[scenarioIdx]
+  const scenario = {
+    outputs: [`⚡ route-auditor v${VERSION}`, ...SCENARIOS[scenarioIdx].outputs.slice(1)],
+  }
 
   return (
     <div className="relative">
