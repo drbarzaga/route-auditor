@@ -52,7 +52,10 @@ const findHardcodedByVariableName = (rawContent: string): string[] => {
 const findKnownSecretPatterns = (rawContent: string): string[] => {
   const found: string[] = []
   for (const pattern of KNOWN_SECRET_PATTERNS) {
-    if (pattern.test(rawContent)) found.push(pattern.source.split('[')[0])
+    if (pattern.test(rawContent)) {
+      const prefix = pattern.source.split('[')[0] ?? pattern.source
+      found.push(prefix)
+    }
   }
   return found
 }
