@@ -77,9 +77,11 @@ const renderVulnerabilityGroup = (
   }
 }
 
+declare const __PACKAGE_VERSION__: string
+
 export const renderHeader = (): void => {
   const header = boxen(
-    `${chalk.cyan.bold('⚡ route-auditor')}\n${chalk.dim('Audit Next.js routes for security issues.')}`,
+    `${chalk.cyan.bold('⚡ route-auditor')} ${chalk.dim(`v${__PACKAGE_VERSION__}`)}\n${chalk.dim('Audit Next.js routes for security issues.')}`,
     { padding: { top: 0, bottom: 0, left: 1, right: 1 }, borderStyle: 'none' },
   )
   console.log(header)
