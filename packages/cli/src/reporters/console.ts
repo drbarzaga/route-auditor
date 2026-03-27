@@ -1,6 +1,6 @@
 import type { AuditResult, Severity, Vulnerability } from '../types'
 import { relative } from 'path'
-import chalk from 'chalk'
+import chalk, { type ChalkInstance } from 'chalk'
 import boxen from 'boxen'
 import { SEVERITY_COLOR } from '../utils/severity-color'
 
