@@ -1,4 +1,4 @@
-import type { AuditConfig, AuditRule } from '../types'
+import type { AuditConfig } from '../types'
 import { Command } from 'commander'
 import { resolve, join } from 'path'
 import { writeFileSync } from 'fs'
