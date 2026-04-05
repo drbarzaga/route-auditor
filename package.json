@@ -26,8 +26,10 @@
     "typescript": "~5.9.0",
     "typescript-eslint": "latest"
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "engines": {
-    "node": ">=22.0.0",
-    "pnpm": ">=9.0.0"
+    "bun": ">=1.0.0"
   }
 }
